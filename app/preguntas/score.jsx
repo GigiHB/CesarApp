@@ -20,13 +20,53 @@ export default function Score() {
           score, setScore,
           respuestas, setRespuestas} = useContext(UserDetailContext);  
 
-  const [selectedOption, setSelectedOption] = useState(null);   
-  const [showCorrect, setShowCorrect] = useState(false);
+  const [selectedQuestionIndex, setselectedQuestionIndex] = useState (null);   
 
   if (!respuestas || respuestas.length === 0) {
     return (
       <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
         <Text>No hay respuestas para mostrar</Text>
+      </View>
+    );
+  }
+
+  const handleSelectedQuestion = (index) => {
+    //si se toca la misma pregunta se cierra
+    if (selectedQuestionIndex === index){
+      setselectedQuestionIndex(null); 
+    } else {
+      setselectedQuestionIndex(index); 
+    }
+  }; 
+
+  const renderAnswer = (respuesta) => {
+    return (
+      <View style={{
+        marginVertical: 5,
+      }}>
+        {respuesta.opciones.map((opt, i)=>{
+          const isCorrect = i === respuesta.correcta;
+          const isSelected = i === respuesta.seleccionada;
+
+          let backgroundColor = Paleta.fondo; 
+
+          if (isCorrect) {
+            backgroundColor = Paleta.green;
+          } 
+          if (isSelected && isCorrect) {
+            backgroundColor = Paleta.red;
+          }
+          return ( 
+            <View key={i} style={{
+              padding: 10, 
+              borderRadius: 8,
+              marginVertical: 2, 
+              backgroundColor, 
+            }}>
+              <Text>{opt}</Text>
+            </View>
+          );
+        })}
       </View>
     );
   }
@@ -75,26 +115,37 @@ export default function Score() {
       <View style={{display:'flex',
         marginTop: '30',
       }}>
-        <TouchableOpacity style={[styles.box, {alignSelf:'center', flexDirection:'row', alignItems: 'center'}]}>
+        {respuestas.map((resp, index)=> ( 
+        <TouchableOpacity 
+        key={index}
+        style={[styles.box, {alignSelf:'center', flexDirection:'row', alignItems: 'center'}]}
+        onPress={()=> handleSelectedQuestion(index)}>
         <Text style={{
           fontFamily: 'SerifRegular',
           fontSize: 25, 
           textAlign: 'center',
           marginRight: 5,
-        }}> Pregunta </Text>
+        }}> Pregunta {index } </Text>
         <AntDesign name="caretdown" size={15} color="black"/>
         </TouchableOpacity>
+        ))}
       </View>  
 
-      <View style={{display: 'flex', marginTop: 20,}}>
-         <Text> Aquí va la pregunta 1 o seleccionada </Text> 
-
+      {selectedQuestionIndex !== null && (  
+      <View style={{ marginTop: 20, paddingHorizontal: 20}}>
+         <Text style={{
+          fontFamily: 'SerifRegular',
+          fontSize: 20, 
+          marginBottom: 10, 
+         }}> {respuestas[selectedQuestionIndex].pregunta} </Text> 
+         <Text> 
+          {renderAnswer(respuestas[selectedQuestionIndex])} </Text>
       </View>
-
+      )} 
     </View> 
 
-    </View>
-  )
+  </View>
+  );
 }
 
 const styles = StyleSheet.create({
