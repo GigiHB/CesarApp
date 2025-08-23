@@ -8,6 +8,7 @@ This is an [Expo](https://expo.dev) project created with [`create-expo-app`](htt
 
 Crea un archivo dentro de la carpeta creada(config) "app/config/firebaseConfig.jsx" con la configuración de Firebase:
 
+```bash
 import { initializeApp } from "firebase/app";
 import { getAuth } from "firebase/auth";
 import { getFirestore } from "firebase/firestore";
@@ -40,6 +41,7 @@ analytics = getAnalytics(app);
 });
 });
 }
+```
 
 ## Get started
 
