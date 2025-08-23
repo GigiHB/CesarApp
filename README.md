@@ -2,6 +2,45 @@
 
 This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
 
+## Antes de inicializar la app necesitas las llaves para firebase, crea una carpeta en la raiz del proyecto config
+
+## Configuración de Firebase
+
+Crea un archivo dentro de la carpeta creada(config) "app/config/firebaseConfig.jsx" con la configuración de Firebase:
+
+import { initializeApp } from "firebase/app";
+import { getAuth } from "firebase/auth";
+import { getFirestore } from "firebase/firestore";
+
+const firebaseConfig = {
+Asegurate de inicializar tu firebase para web<>, en configuracion del proyecto de firebase encuentras la opción y datos para este archivo, los encuentras en este mismo orden:
+
+apiKey: "LA APLIKEY DE LA BASE DE DATOS"
+authDomain: " lorem ipsum ",
+projectId: "lorem ipsum",
+storageBucket: "lorem ipsum",
+messagingSenderId: ""lorem ipsum",
+appId: "lorem ipsum",
+measurementId: "lorem ipsum",
+};
+
+const app = initializeApp(firebaseConfig);
+
+export const auth = getAuth(app);
+export const db = getFirestore(app);
+
+// Analytics: import dinámico para evitar "window is not defined"
+export let analytics;
+if (typeof window !== "undefined") {
+import("firebase/analytics").then(({ getAnalytics, isSupported }) => {
+isSupported().then((supported) => {
+if (supported) {
+analytics = getAnalytics(app);
+}
+});
+});
+}
+
 ## Get started
 
 1. Install dependencies
@@ -14,6 +53,10 @@ This is an [Expo](https://expo.dev) project created with [`create-expo-app`](htt
 
    ```bash
    npx expo start
+
+   or
+
+   npm expo start -c //Con esta borras cache
    ```
 
 In the output, you'll find options to open the app in a

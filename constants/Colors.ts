@@ -6,6 +6,27 @@
 const tintColorLight = '#0a7ea4';
 const tintColorDark = '#fff';
 
+export const Paleta = {
+  fondo: '#f6f9fe',
+  lightBlue: '#daebf0ff',
+  skyBlue: '#87cefa', 
+  navy: '#000080', 
+  royalBlue: '#4169e1',
+  black: '#000000', 
+  lightGrey: '#e0e0e0ff',
+  lightSkyBlue: '#87cefa',
+  cornBlue: '#6495ed',
+  iconBlue: '#84a9ff',
+  icon2: '#f5f8ff',
+  azure: '#f0ffff',
+  grey: '#808080',
+  bluelight: '#d7e9ff',
+  blueBox: '#6ab1ff', 
+  witheBox: '#FFFFFF',
+  green: '#5dd586', 
+  red: '#ff3131',
+}
+
 export const Colors = {
   light: {
     text: '#11181C',
