@@ -39,4 +39,4 @@ yarn-error.*
 app-example
 
 # Firebase config
-app/config/firebaseConfig.ts
+config/firebaseConfig.jsx
