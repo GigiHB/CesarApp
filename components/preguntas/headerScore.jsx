@@ -24,7 +24,7 @@ export default function HeaderScore() {
         display: 'flex',
     }}> 
         <Entypo name="open-book" size={55} color="black" style={{
-            marginTop: 20, 
+            marginTop: 2, 
             marginLeft: 140,
         }}
         />  
@@ -32,11 +32,11 @@ export default function HeaderScore() {
             fontFamily: 'SerifText',
             textAlign: 'center', 
             fontSize: 30,
-            marginTop: 20
+            marginTop: 2
         }}> ¡Buen trabajo {userDetail?.name}!
         </Text>
         <Text style={{
-            marginTop: 10, 
+            marginTop: 2, 
             fontFamily: 'SerifRegular',
             fontSize: 35,
             textAlign: 'center'

@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, ScrollView } from 'react-native';
 import React from 'react';
 import { Paleta } from '../../constants/Colors';
 import HeaderScore from '../../components/preguntas/headerScore';
@@ -20,7 +20,8 @@ export default function Score() {
           score, setScore,
           respuestas, setRespuestas} = useContext(UserDetailContext);  
 
-  const [selectedQuestionIndex, setselectedQuestionIndex] = useState (null);   
+  const [dropDownOpen, setDropDownOpen] = useState(false);        
+  const [selectedQuestionIndex, setselectedQuestionIndex] = useState (0);   
 
   if (!respuestas || respuestas.length === 0) {
     return (
@@ -31,18 +32,16 @@ export default function Score() {
   }
 
   const handleSelectedQuestion = (index) => {
-    //si se toca la misma pregunta se cierra
-    if (selectedQuestionIndex === index){
-      setselectedQuestionIndex(null); 
-    } else {
-      setselectedQuestionIndex(index); 
-    }
+    //Cerrar el menu al elegir 
+    setselectedQuestionIndex(index);
+    setDropDownOpen(false); 
   }; 
 
   const renderAnswer = (respuesta) => {
     return (
       <View style={{
         marginVertical: 5,
+        marginHorizontal: 5, 
       }}>
         {respuesta.opciones.map((opt, i)=>{
           const isCorrect = i === respuesta.correcta;
@@ -50,18 +49,17 @@ export default function Score() {
 
           let backgroundColor = Paleta.fondo; 
 
-          if (isCorrect) {
-            backgroundColor = Paleta.green;
-          } 
-          if (isSelected && isCorrect) {
-            backgroundColor = Paleta.red;
-          }
+          if (isCorrect) backgroundColor = Paleta.green;  
+          if (isSelected && !isCorrect) backgroundColor = Paleta.red;
+          
           return ( 
             <View key={i} style={{
               padding: 10, 
               borderRadius: 8,
               marginVertical: 2, 
-              backgroundColor, 
+              backgroundColor,
+              width: 200,
+              marginLeft: 20, 
             }}>
               <Text>{opt}</Text>
             </View>
@@ -78,7 +76,7 @@ export default function Score() {
         justifyContent: 'center', 
     }}>
       <View style={{
-        flex: 0.5,
+        flex: 0.4,
         margin: 20,
         padding: 25, 
         backgroundColor: Paleta.bluelight,  
@@ -88,15 +86,19 @@ export default function Score() {
         shadowOpacity: 0.2,
         shadowRadius: 5, 
       }}>
-        <HeaderScore />
+        <HeaderScore/>
         <View style={{flex:1, justifyContent: 'center', alignItems: 'center'}}>
           <ScoreComponet />
         </View>
       </View>
+
+       {/* Vista sin fondo azul (segunda mitad de pagina)*/}
     <View style={{
-      flex: 0.5, 
+      flex: 0.6, 
       backgroundColor: Paleta.fondo, 
     }}>
+
+       {/*Casillas de color para respuesta correcta o incorrecta */}
       <View style={{display: 'flex', flexDirection: 'row', marginLeft: 35}}>
         <View style={[styles.checkbox, {backgroundColor:Paleta.green}]}/>
         <Text style={{
@@ -112,38 +114,91 @@ export default function Score() {
         }}> Respuesta incorrecta </Text>
       </View>
 
+        {/*Dropdown de preguntas */}
       <View style={{display:'flex',
         marginTop: '30',
-      }}>
-        {respuestas.map((resp, index)=> ( 
+        alignItems: 'center',
+      }}> 
         <TouchableOpacity 
-        key={index}
-        style={[styles.box, {alignSelf:'center', flexDirection:'row', alignItems: 'center'}]}
-        onPress={()=> handleSelectedQuestion(index)}>
-        <Text style={{
-          fontFamily: 'SerifRegular',
-          fontSize: 25, 
-          textAlign: 'center',
-          marginRight: 5,
-        }}> Pregunta {index } </Text>
-        <AntDesign name="caretdown" size={15} color="black"/>
+        style={[styles.box, {alignSelf:'center', flexDirection:'row', alignItems: 'center', marginTop:15,}]}
+        onPress={()=> setDropDownOpen(!dropDownOpen)}>
+        <Text style={styles.boxText}> {selectedQuestionIndex !== null 
+        ? `Pregunta ${selectedQuestionIndex +1}`: "Selecciona una pregunta"} </Text>
+        <AntDesign name={dropDownOpen ? "caretup": "caretdown"} size={15} color="black"/>
         </TouchableOpacity>
-        ))}
-      </View>  
 
-      {selectedQuestionIndex !== null && (  
-      <View style={{ marginTop: 20, paddingHorizontal: 20}}>
-         <Text style={{
-          fontFamily: 'SerifRegular',
-          fontSize: 20, 
-          marginBottom: 10, 
-         }}> {respuestas[selectedQuestionIndex].pregunta} </Text> 
-         <Text> 
-          {renderAnswer(respuestas[selectedQuestionIndex])} </Text>
-      </View>
-      )} 
+       {/*Menu de preguntas */}
+      {dropDownOpen && (
+        <View style={{
+          marginTop: 5,
+          borderWidth: 1,
+          borderColor: Paleta.grey, 
+          borderRadius: 10,
+          backgroundColor: Paleta.fondo, 
+          width: 200,
+        }}>
+        <ScrollView style={{ maxHeight: 350 }}>
+        {respuestas.map((_, index) => (
+          <TouchableOpacity
+          key={index}
+          style={{padding: 10, 
+          borderBottomWidth: index !== respuestas.length -1 ? 1 : 0, 
+          borderBlockColor: Paleta.grey }}
+          onPress={()=> handleSelectedQuestion(index)}>
+            <Text style={{textAlign:'center'}}> Pregunta {index +1 } </Text>
+          </TouchableOpacity>
+        ))}
+        </ScrollView>  
+        </View>
+      )}  
     </View> 
 
+     {/*Mostrar la pregunta seleccionada*/}
+     {selectedQuestionIndex !== null && (
+      <View style={{
+        margin: 20,
+        padding: 25, 
+        backgroundColor: Paleta.fondo,  
+        borderRadius: 35, 
+        shadowColor: Paleta.grey,
+        shadowOffset: {width: 0, height: 4}, 
+        shadowOpacity: 0.2,
+        shadowRadius: 5,}}>
+      <Text style={{
+        fontFamily: 'SerifRegular', 
+        fontSize: 20, 
+        marginBottom: 5,
+        alignSelf: 'center', 
+      }}> {respuestas[selectedQuestionIndex].pregunta}
+      </Text>
+      {renderAnswer(respuestas[selectedQuestionIndex])}
+      </View>
+     )} 
+
+    <View style={{flex: 1, alignContent:'center', justifyContent: 'center',}}>
+      <TouchableOpacity style={{
+        alignSelf: 'center',
+        alignItems: "center",
+        justifyContent: 'center',
+        width: 180,
+        padding:5,
+        borderWidth: 1,
+        borderColor: Paleta.grey,
+        borderRadius: 8,
+        backgroundColor: Paleta.bluelight,
+      }}>
+        <Text style={{
+          fontFamily: 'SerifRegular',
+          fontSize: 18, 
+          color: Paleta.black
+        }} 
+        onPress={()=>router.push('/(tabs)/home')}
+        > Página de inicio </Text>
+      </TouchableOpacity>
+    </View>
+
+    </View> 
+    
   </View>
   );
 }
@@ -167,7 +222,13 @@ const styles = StyleSheet.create({
     borderColor: Paleta.grey,
     borderRadius: 10,
     backgroundColor: "#fff",
-    marginTop: 20,
+  },
+
+  boxText: {
+    fontFamily: 'SerifRegular',
+    fontSize: 25, 
+    textAlign: 'center',
+    marginRight: 5,
   },
   
 })
