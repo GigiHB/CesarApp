@@ -32,6 +32,7 @@ export default function Quiz() {
   setCurrentIndex(0);
   setCurrentPregunta(0);
   setScore(0);
+  setRespuestas([]);
   setSelectedOption(null);
 }, [selectedTopic]);
 
