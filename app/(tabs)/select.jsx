@@ -5,6 +5,7 @@ import Entypo from '@expo/vector-icons/Entypo';
 import React, { useContext, useState } from 'react'
 import { useRouter } from 'expo-router';
 import { UserDetailContext } from '../../context/userDetailContext'
+import { Preguntas } from '../../components/preguntas/preguntas'
 
 
 
@@ -15,7 +16,7 @@ export default function Select() {
       selectedTopic, setSelectedTopic, 
       numPreguntas, setNumPreguntas} = useContext(UserDetailContext)
     const [selected, setSelected] = useState(null);
-    const TotalPreguntas = numPreguntas; 
+    const disponibles = Preguntas.filter((p) => p.topic === selectedTopic).length;
 
 
   return (
@@ -56,6 +57,12 @@ export default function Select() {
         fontSize: 15,
         color: Paleta.grey,
       }}> Selecciona el número de preguntas</Text>
+      <Text style={{
+        marginLeft: 10,
+        fontFamily: 'SerifText',
+        fontSize: 13,
+        color: Paleta.grey,
+      }}> Disponibles en {selectedTopic}: {disponibles}</Text>
       
     <View style={styles.container}> 
     {options.map((num)=> (
@@ -82,7 +89,7 @@ export default function Select() {
       <TouchableOpacity style={styles.button} 
       onPress={()=>{
         if (selected) {
-          setNumPreguntas(selected);
+          setNumPreguntas(Math.min(selected, disponibles));
           router.push("/preguntas/quiz");}
           else {
             alert("Selecciona el número de preguntas");
