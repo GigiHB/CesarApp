@@ -83,7 +83,7 @@ export default function Select() {
       onPress={()=>{
         if (selected) {
           setNumPreguntas(selected);
-          router.push(`/preguntas/${selected}preg`);}
+          router.push("/preguntas/quiz");}
           else {
             alert("Selecciona el número de preguntas");
           }

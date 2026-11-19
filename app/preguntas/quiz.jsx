@@ -9,7 +9,7 @@ import { UserDetailContext } from '../../context/userDetailContext';
 import {Preguntas} from '../../components/preguntas/preguntas';
 import { useEffect } from 'react';
 
-export default function CincuentaPreguntas() {
+export default function Quiz() {
 
   const router = useRouter();
   const {userDetail, setUserDetail,
